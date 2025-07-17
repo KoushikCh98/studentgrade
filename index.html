@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Grade Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-200 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-xl w-full space-y-6">
+    <h1 class="text-3xl font-bold text-center text-purple-700">Student Grade Calculator</h1>
+
+    <form id="gradeForm" class="space-y-4">
+      <div id="subjectsContainer" class="space-y-4">
+        <div class="flex gap-4">
+          <input type="text" name="subject" placeholder="Subject Name" class="w-1/2 p-2 border rounded-lg" required>
+          <input type="number" name="marks" placeholder="Marks (out of 100)" class="w-1/2 p-2 border rounded-lg" min="0" max="100" required>
+        </div>
+      </div>
+
+      <button type="button" onclick="addSubject()" class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">Add Subject</button>
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition">Calculate</button>
+    </form>
+
+    <div id="result" class="text-center text-lg font-semibold text-gray-800 hidden space-y-2">
+      <p id="totalMarks"></p>
+      <p id="percentage"></p>
+      <p id="grade"></p>
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById('subjectsContainer');
+    const form = document.getElementById('gradeForm');
+    const resultDiv = document.getElementById('result');
+
+    function addSubject() {
+      const subjectRow = document.createElement('div');
+      subjectRow.className = "flex gap-4";
+      subjectRow.innerHTML = `
+        <input type="text" name="subject" placeholder="Subject Name" class="w-1/2 p-2 border rounded-lg" required>
+        <input type="number" name="marks" placeholder="Marks (out of 100)" class="w-1/2 p-2 border rounded-lg" min="0" max="100" required>
+      `;
+      container.appendChild(subjectRow);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const marksInputs = document.querySelectorAll('input[name="marks"]');
+      let total = 0;
+      let count = 0;
+      marksInputs.forEach(input => {
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) {
+          total += val;
+          count++;
+        }
+      });
+
+      if (count === 0) return;
+
+      const percentage = total / count;
+      let grade;
+      if (percentage >= 90) grade = "A+";
+      else if (percentage >= 80) grade = "A";
+      else if (percentage >= 70) grade = "B";
+      else if (percentage >= 60) grade = "C";
+      else if (percentage >= 50) grade = "D";
+      else grade = "F";
+
+      document.getElementById("totalMarks").textContent = `Total Marks: ${total}`;
+      document.getElementById("percentage").textContent = `Percentage: ${percentage.toFixed(2)}%`;
+      document.getElementById("grade").textContent = `Grade: ${grade}`;
+      resultDiv.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
